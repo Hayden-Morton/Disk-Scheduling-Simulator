@@ -11,5 +11,6 @@
         directionType direction;
     } CylinderHead;
 
+    CylinderHead* emptyCylinderHead(void);
 #endif
 
