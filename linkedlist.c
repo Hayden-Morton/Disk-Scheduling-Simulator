@@ -13,7 +13,7 @@ LinkedList* createLinkedList(void){     /*creates and allocates the LinkedList, 
 
 
 
-void insertLast(LinkedList* list, void* data){  /*creates and inserts a list node to the end of the Linkedlist, with given the data*/
+void insertLast(LinkedList* list, int data){  /*creates and inserts a list node to the end of the Linkedlist, with given the data*/
     
     LinkedListNode* newNode = (LinkedListNode*)malloc(sizeof(LinkedListNode));  /*allocates the listNode*/
     
@@ -51,22 +51,15 @@ LinkedListNode* removeStart(LinkedList* list){    /*returns the head of the list
     return temp;
 }
 
-void emptyLinkedList(LinkedList* list, listFunc freeData){ /*deletes (and deallocates) all entries in the linked list*/
-    freeNode(list->head, freeData); /*deallocates all entries*/
-    list->head = NULL;  
-    list->tail = NULL;      /*reset back to empty*/
-    list->amount = 0;
-}
 
-void freeLinkedList(LinkedList* list, listFunc freeData){   /*frees the entire linkedListi, depending on the type data it holds*/
-    freeNode(list->head, freeData); /*free all the nodes first*/
+void freeLinkedList(LinkedList* list){   /*frees the entire linkedListi, depending on the type data it holds*/
+    freeNode(list->head); /*free all the nodes first*/
     free(list);
 }
 
-void freeNode(LinkedListNode* node, listFunc freeData){ /*frees the nodes, depending on the type of data it holds*/
+void freeNode(LinkedListNode* node){ /*frees the nodes, depending on the type of data it holds*/
     if (node != NULL){  /*Recursive call, going though all the nodes*/
-        freeNode(node->next, freeData); 
-        freeData(node->data);   /*frees the data first*/
+        freeNode(node->next); 
         free(node); /*frees the node itself*/
     }
 }

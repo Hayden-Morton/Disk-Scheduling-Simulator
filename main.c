@@ -54,20 +54,21 @@ int main(int argc, char* argv[]) {
 		}
 	} while (successRead == 1);
 
-	fclose(source);
 
 	if (ferror(source)) {
 		perror("Error reading File");
 	}
 	
+	fclose(source);
+
 	printf("%d\n%d\n%d\n",head.total,head.currentPosition,head.direction);
 	
 	cur = requestList->head;
 	while (cur != NULL) {
-		printf("%d\n",(int*)(cur->data));
+		printf("%d\n",(cur->data));
 		cur = cur->next;
 	}
-
+	freeLinkedList(requestList);
 	return 0;
 }
 

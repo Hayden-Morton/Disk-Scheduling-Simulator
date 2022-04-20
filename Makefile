@@ -21,5 +21,8 @@ linkedlist.o : linkedlist.c linkedlist.h
 clean:
 	rm -f $(EXEC) $(OBJ)
 
-run:
+run : $(EXEC)
 	./$(EXEC) testfile.txt
+
+val : $(EXEC)
+	valgrind --leak-check=full --track-origins=yes -s ./$(EXEC) testfile.txt
