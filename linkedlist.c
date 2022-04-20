@@ -32,28 +32,9 @@ void insertLast(LinkedList* list, int data){  /*creates and inserts a list node 
     list->amount += 1;  
 }
 
-LinkedListNode* removeStart(LinkedList* list){    /*returns the head of the list, removing it from the list*/
-    LinkedListNode* temp;  
-   
-    temp = list->head;
-    if (temp->next != NULL){    /*if this is tha last node in the list*/
-        list->head = list->head->next;  /*set the head to be the  second value*/
-        
-        temp->next = NULL;
-        list->head->prev = NULL;    /*set the new head to no longer point to the removed value*/
-    }
-    else{
-        list->head = NULL;
-        list->tail = NULL;
-    }
-    list->amount -= 1;  /*because the list now has less values*/
-
-    return temp;
-}
-
-
 void freeLinkedList(LinkedList* list){   /*frees the entire linkedListi, depending on the type data it holds*/
     freeNode(list->head); /*free all the nodes first*/
+    list = NULL;
     free(list);
 }
 

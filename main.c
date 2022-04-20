@@ -1,35 +1,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "cylinderHead.h"
+#include "buffer1.h"
 #include "linkedlist.h"
 #include "readFile.h"
 
 int main(int argc, char* argv[]) {
 	char* sourceFile = argv[1];
 
-	CylinderHead* head = emptyCylinderHead();
-	LinkedList* requestList = createLinkedList();
-
+	Buffer1* buffer1 = allocatedBuffer1();
+	
+	#ifdef DEBUG
 	LinkedListNode* cur;
+	#endif
 
 	int failure;
 
-	failure = readFile(sourceFile, head, requestList);
+	failure = readFile(sourceFile, buffer1);
 	if (failure) {
-		freeLinkedList(requestList);
-		free(head);
+		freeBuffer1(buffer1);
 		return 1;
 	}
-	printf("%d\n%d\n%d\n",head->total,head->currentPosition,head->direction);
+
+	#ifdef DEBUG
+		printf("%d\n%d\n%d\n",buffer1->total,buffer1->currentPosition,buffer1->direction);
+		cur = buffer1->requestList->head;
+		while (cur != NULL) {
+			printf("%d\n",(cur->data));
+			cur = cur->next;
+		}
+	#endif
 	
-	cur = requestList->head;
-	while (cur != NULL) {
-		printf("%d\n",(cur->data));
-		cur = cur->next;
-	}
-	freeLinkedList(requestList);
-	free(head);
+	freeBuffer1(buffer1);
 	return 0;
 }
 

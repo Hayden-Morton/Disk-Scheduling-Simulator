@@ -1,17 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "cylinderHead.h"
+#include "buffer1.h"
 #include "linkedlist.h"
 
 
-int readFile(char* sourceFileName, CylinderHead* head, LinkedList* requestList) {
+int readFile(char* sourceFileName, Buffer1* buffer1) { 
 	FILE* source;
 
 	int cylinderTotal, startPos, prevPos;
 	int request;
 	int successRead;
-
 
 	source = fopen(sourceFileName,"r");
 	if (source == NULL) {
@@ -26,18 +25,18 @@ int readFile(char* sourceFileName, CylinderHead* head, LinkedList* requestList) 
 		return 2;
 	}
 
-	head->total = cylinderTotal;
-	head->currentPosition = startPos;
+	buffer1->total = cylinderTotal;
+	buffer1->currentPosition = startPos;
 	if (startPos > prevPos) {
-		head->direction = ASCENDING;
+		buffer1->direction = ASCENDING;
 	} else {
-		head->direction = DESCENDING;
+		buffer1->direction = DESCENDING;
 	}
 
 	do {
 		successRead = fscanf(source, "%d", &request);
 		if (successRead == 1) {
-			insertLast(requestList, request);
+			insertLast(buffer1->requestList, request);
 		}
 	} while (successRead == 1);
 
