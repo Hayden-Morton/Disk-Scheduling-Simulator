@@ -2,6 +2,8 @@
 #include <stdlib.h>
 
 #include "cylinderHead.h"
+#include "linkedlist.h"
+
 
 int main(int argc, char* argv[]) {
 	char* sourceFile = argv[1];
@@ -9,8 +11,14 @@ int main(int argc, char* argv[]) {
 
 	int cylinderTotal, startPos, prevPos;
 	CylinderHead head;
-	
+	int request;
+	LinkedList* requestList;
 	int successRead;
+	
+	LinkedListNode* cur;
+
+
+
 
 	if (argc < (1 + 1)) {
 		printf("Invalid Arguments\n");
@@ -37,14 +45,29 @@ int main(int argc, char* argv[]) {
 	} else {
 		head.direction = DESCENDING;
 	}
+	requestList = createLinkedList();
+	do {
+
+		successRead = fscanf(source, "%d", &request);
+		if (successRead == 1) {
+			insertLast(requestList, request);
+		}
+	} while (successRead == 1);
 
 	fclose(source);
+
 	if (ferror(source)) {
 		perror("Error reading File");
 	}
 	
 	printf("%d\n%d\n%d\n",head.total,head.currentPosition,head.direction);
 	
+	cur = requestList->head;
+	while (cur != NULL) {
+		printf("%d\n",(int*)(cur->data));
+		cur = cur->next;
+	}
+
 	return 0;
 }
 

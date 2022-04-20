@@ -2,7 +2,7 @@
 CC = gcc
 EXEC = schedulSim
 CFLAGS = -Wall -ansi -pedantic -Werror -g
-OBJ = main.o
+OBJ = main.o linkedlist.o
 
 ifdef DEBUG
 CFLAGS += -D DEBUG
@@ -12,9 +12,11 @@ endif
 $(EXEC) : $(OBJ)
 	$(CC) $(OBJ) -o $(EXEC)
 
-main.o:	main.c cylinderHead.h
+main.o:	main.c cylinderHead.h linkedlist.h
 	$(CC) $(CFLAGS) main.c -c
 
+linkedlist.o : linkedlist.c linkedlist.h
+	$(CC) $(CFLAGS) linkedlist.c -c
 
 clean:
 	rm -f $(EXEC) $(OBJ)
