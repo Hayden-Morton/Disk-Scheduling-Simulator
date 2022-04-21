@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "buffer1.h"
@@ -9,7 +10,7 @@ int FCFS(Buffer1* buffer1) {
     LinkedListNode* cur = buffer1->requestList->head;
     int total = 0;
     
-    total += abs(buffer1->currentPosition - cur->data);
+    total += abs(buffer1->startingPosition - cur->data);
     cur = cur->next;
 
     while (cur != NULL) {

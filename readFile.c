@@ -26,7 +26,7 @@ int readFile(char* sourceFileName, Buffer1* buffer1) {
 	}
 
 	buffer1->total = cylinderTotal;
-	buffer1->currentPosition = startPos;
+	buffer1->startingPosition = startPos;
 	if (startPos > prevPos) {
 		buffer1->direction = ASCENDING;
 	} else {

@@ -9,7 +9,7 @@
 
     typedef struct {
         int total;
-        int currentPosition;
+        int startingPosition;
         directionType direction;
         LinkedList* requestList;
     } Buffer1;

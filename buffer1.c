@@ -9,7 +9,7 @@ Buffer1* allocatedBuffer1(void) {
     buffer1->requestList = createLinkedList();
 
     buffer1->total = 0;
-    buffer1->currentPosition = 0;
+    buffer1->startingPosition = 0;
     buffer1->direction = 0;
 
     return buffer1;
