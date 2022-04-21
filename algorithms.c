@@ -72,6 +72,7 @@ int _iterateThroughCylinders(Buffer1* buffer1, restartSearchFunction restart) {
                 total += abs(prevPosition - cur->data);
                 prevPosition = cur->data;
                 removeNode(unvisited,cur);
+                cur = NULL;
             } else {
                 cur = cur->next;
             }

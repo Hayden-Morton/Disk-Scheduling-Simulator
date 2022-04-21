@@ -65,11 +65,13 @@ LinkedList* copyLinkedList(LinkedList* orig) {
 void freeLinkedList(LinkedList* list){   /*frees the entire linkedListi, depending on the type data it holds*/
     freeNode(list->head); /*free all the nodes first*/
     free(list);
+    list = NULL;
 }
 
 void freeNode(LinkedListNode* node){ /*frees the nodes, depending on the type of data it holds*/
     if (node != NULL){  /*Recursive call, going though all the nodes*/
         freeNode(node->next); 
         free(node); /*frees the node itself*/
+        node = NULL;
     }
 }
