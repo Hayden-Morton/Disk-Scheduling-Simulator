@@ -4,8 +4,8 @@
     #include "linkedlist.h"
 
     typedef int directionType;
-    #define ASCENDING 0
-    #define DESCENDING 1
+    #define ASCENDING 1
+    #define DESCENDING -1
 
     typedef struct {
         int total;

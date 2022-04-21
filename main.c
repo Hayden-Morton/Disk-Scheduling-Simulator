@@ -15,6 +15,8 @@ int main(int argc, char* argv[]) {
 	LinkedListNode* cur;
 	#endif
 
+
+
 	int failure;
 
 	if (argc != 1+1) {
@@ -37,19 +39,14 @@ int main(int argc, char* argv[]) {
 			cur = cur->next;
 		}
 	#endif
-	
-	removeNode(buffer1->requestList, buffer1->requestList->head->next->next);
+	printf("FCFS %d\n",FCFS(buffer1));
+	printf("SSTF %d\n",SSTF(buffer1));
+	printf("SCAN %d\n",SCAN(buffer1));
+	printf("CSCAN %d\n",CSCAN(buffer1));
+	printf("LOOK %d\n",LOOK(buffer1));
+	printf("CLOOK %d\n",CLOOK(buffer1));
 
 
-	#ifdef DEBUG
-		printf("%d\n%d\n%d\n",buffer1->total,buffer1->startingPosition,buffer1->direction);
-		cur = buffer1->requestList->head;
-		while (cur != NULL) {
-			printf("%d\n",(cur->data));
-			cur = cur->next;
-		}
-	#endif
-	
 	freeBuffer1(buffer1);
 	return 0;
 }
