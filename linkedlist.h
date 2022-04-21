@@ -17,10 +17,10 @@
     LinkedList* createLinkedList(void);
 
     void insertLast(LinkedList* list, int data);
-    LinkedListNode* removeStart(LinkedList* list);
-    
+    void removeNode(LinkedList* list, LinkedListNode* node);
 
-    void emptyLinkedList(LinkedList* list);
+    LinkedList* copyLinkedList(LinkedList* orig);
+
     void freeLinkedList(LinkedList* list);
     void freeNode(LinkedListNode* node);
 

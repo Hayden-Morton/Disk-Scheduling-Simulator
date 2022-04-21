@@ -1,4 +1,4 @@
-
+#include <stdio.h>
 #include <stdlib.h>
 #include "linkedlist.h"
 
@@ -32,9 +32,45 @@ void insertLast(LinkedList* list, int data){  /*creates and inserts a list node 
     list->amount += 1;  
 }
 
+void removeNode(LinkedList* list, LinkedListNode* node){
+
+    if ( (list->head == node) && (list->tail == node) ) {
+        printf("lonely");
+        list->head = NULL;
+        list->tail = NULL;
+    } else if (list->head== node) {
+        printf("head");
+        node->next->prev = NULL;
+        list->head = node->next;
+    } else if (list->tail == node) {
+        printf("tail");
+        node->prev->next = NULL;
+        list->tail = node->prev;
+    } else {
+        printf("middle");
+        node->next->prev = node->prev;
+        node->prev->next = node->next;
+    }
+
+    node->next = NULL;
+    node->prev = NULL;
+    freeNode(node);
+}
+
+LinkedList* copyLinkedList(LinkedList* orig) {
+    LinkedList* copy = createLinkedList();
+    LinkedListNode* cur = orig->head;
+    printf("asdas");
+    while (cur != NULL) {
+        printf("%d ",cur->data);
+        insertLast(copy, cur->data);
+        cur = cur->next;
+    }
+    return copy;
+}
+
 void freeLinkedList(LinkedList* list){   /*frees the entire linkedListi, depending on the type data it holds*/
     freeNode(list->head); /*free all the nodes first*/
-    list = NULL;
     free(list);
 }
 

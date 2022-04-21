@@ -17,6 +17,5 @@ Buffer1* allocatedBuffer1(void) {
 
 void freeBuffer1(Buffer1* buffer1) {
     freeLinkedList(buffer1->requestList);
-    buffer1 = NULL;
     free(buffer1);
 }

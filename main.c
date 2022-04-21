@@ -4,6 +4,7 @@
 #include "buffer1.h"
 #include "linkedlist.h"
 #include "readFile.h"
+#include "algorithms.h"
 
 int main(int argc, char* argv[]) {
 	char* sourceFile = argv[1];
@@ -16,10 +17,16 @@ int main(int argc, char* argv[]) {
 
 	int failure;
 
+	if (argc != 1+1) {
+		printf("Error: Invalid Arguments");
+		freeBuffer1(buffer1);
+		return 1;
+	}
+
 	failure = readFile(sourceFile, buffer1);
 	if (failure) {
 		freeBuffer1(buffer1);
-		return 1;
+		return 2;
 	}
 
 	#ifdef DEBUG
@@ -30,6 +37,8 @@ int main(int argc, char* argv[]) {
 			cur = cur->next;
 		}
 	#endif
+	printf("FCFS: %d\n",FCFS(buffer1));
+	printf("SSTF: %d\n",SSTF(buffer1));
 	
 	freeBuffer1(buffer1);
 	return 0;
