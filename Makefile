@@ -12,7 +12,7 @@ endif
 $(EXEC) : $(OBJ)
 	$(CC) $(OBJ) -o $(EXEC)
 
-main.o : main.c buffer1.h linkedlist.h readFile.h algorithms.h
+main.o : main.c buffer1.h linkedlist.h readFile.h algorithms.h assumptions.h
 	$(CC) $(CFLAGS) main.c -c
 
 readFile.o : readFile.c buffer1.h linkedlist.h
@@ -31,8 +31,8 @@ clean:
 	rm -f $(EXEC) $(OBJ)
 
 run : $(EXEC)
-	./$(EXEC) testfile.txt 
+	./$(EXEC) testfile.txt < userInput.txt
 
 val: $(EXEC)
-	valgrind --leak-check=full --track-origins=yes -s ./$(EXEC) testfile.txt
+	valgrind --leak-check=full --track-origins=yes -s ./$(EXEC) < userInput.txt
 	

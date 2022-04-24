@@ -1,0 +1,5 @@
+doesntexit
+waytoolonganinput
+input2.txt
+input1.txt
+QUIT
