@@ -1,38 +1,34 @@
 
+SRC_DIR = src
+BUILD_DIR = build
+DEST_DIR = dest
+
+
 CC = gcc
-EXEC = schedulSim
+EXEC = scheduleSim
 CFLAGS = -Wall -ansi -pedantic -Werror -g
-OBJ = main.o linkedlist.o readFile.o buffer1.o algorithms.o
 
-ifdef DEBUG
-CFLAGS += -D DEBUG
-DEBUG : clean $(EXEC)
-endif
+SRCS = $(shell find $(SRC_DIR) -name '*.c')
 
-$(EXEC) : $(OBJ)
-	$(CC) $(OBJ) -o $(EXEC)
+OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 
-main.o : main.c buffer1.h linkedlist.h readFile.h algorithms.h assumptions.h
-	$(CC) $(CFLAGS) main.c -c
+$(BUILD_DIR)/$(EXEC) : $(OBJS)
+	$(CC) $(OBJS) -o $(DEST_DIR)/$(EXEC)
 
-readFile.o : readFile.c buffer1.h linkedlist.h
-	$(CC) $(CFLAGS) readFile.c -c
+$(BUILD_DIR)/%.c.o : %.c
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-buffer1.o : buffer1.h linkedlist.h
-	$(CC) $(CFLAGS) buffer1.c -c
-
-algorithms.o : algorithms.h buffer1.h linkedlist.h
-	$(CC) $(CFLAGS) algorithms.c -c
-
-linkedlist.o : linkedlist.c linkedlist.h
-	$(CC) $(CFLAGS) linkedlist.c -c
-
+.PHONY: clean
 clean:
-	rm -f $(EXEC) $(OBJ)
+	rm -r $(BUILD_DIR)
+	rm $(DEST_DIR)/$(EXEC)
 
-run : $(EXEC)
-	./$(EXEC) testfile.txt < userInput.txt
+run:
+	./$(DEST_DIR)/$(EXEC)
 
-val: $(EXEC)
-	valgrind --leak-check=full --track-origins=yes -s ./$(EXEC) < userInput.txt
-	
+test:
+	./$(DEST_DIR)/$(EXEC) < $(DEST_DIR)/userInput.txt
+
+val:
+	valgrind --leak-check=full --track-origins=yes -s ./$(DEST_DIR)/$(EXEC) < $(DEST_DIR)/userInput.txt
