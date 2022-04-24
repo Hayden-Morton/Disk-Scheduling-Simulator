@@ -8,12 +8,14 @@ CC = gcc
 EXEC = simulator
 CFLAGS = -Wall -ansi -pedantic -Werror -g
 
+EXECTOTAL = $(DEST_DIR)/$(EXEC)
+
 SRCS = $(shell find $(SRC_DIR) -name '*.c')
 
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 
 $(BUILD_DIR)/$(EXEC) : $(OBJS)
-	$(CC) $(OBJS) -o $(DEST_DIR)/$(EXEC)
+	$(CC) $(OBJS) -o $(EXECTOTAL)
 
 $(BUILD_DIR)/%.c.o : %.c
 	mkdir -p $(dir $@)
@@ -21,14 +23,14 @@ $(BUILD_DIR)/%.c.o : %.c
 
 .PHONY: clean
 clean:
+	rm $(EXECTOTAL)
 	rm -r $(BUILD_DIR)
-	rm $(DEST_DIR)/$(EXEC)
 
-run:
-	./$(DEST_DIR)/$(EXEC)
+run : $(BUILD_DIR)/$(EXEC)
+	./$(EXECTOTAL)
 
-test:
-	./$(DEST_DIR)/$(EXEC) < $(DEST_DIR)/userInput.txt
+test : $(BUILD_DIR)/$(EXEC)
+	./$(EXECTOTAL) < $(DEST_DIR)/userInput.txt
 
-val:
-	valgrind --leak-check=full --track-origins=yes -s ./$(DEST_DIR)/$(EXEC) < $(DEST_DIR)/userInput.txt
+val : $(BUILD_DIR)/$(EXEC)
+	valgrind --leak-check=full --track-origins=yes -s ./$(EXECTOTAL) < $(DEST_DIR)/userInput.txt
