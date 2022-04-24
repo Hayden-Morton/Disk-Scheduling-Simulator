@@ -5,7 +5,7 @@ DEST_DIR = dest
 
 
 CC = gcc
-EXEC = scheduleSim
+EXEC = simulator
 CFLAGS = -Wall -ansi -pedantic -Werror -g
 
 SRCS = $(shell find $(SRC_DIR) -name '*.c')
