@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libgen.h>
+
 
 #include "buffer1.h"
 #include "linkedlist.h"
@@ -13,11 +15,6 @@ int main(void) {
 
 	Buffer1* buffer1;
 	
-	#ifdef DEBUG
-	LinkedListNode* cur;
-	#endif
-
-
 	int continueStatus = TRUE;
 		
 	char sourceFilename[MAXUSERINPUTLENGTH];
@@ -26,11 +23,8 @@ int main(void) {
 		printf("Disk Scheduler Simulation: ");
 		scanf("%s",sourceFilename);
 		
-		#ifdef DEBUG
-			printf("%ld %s \n",strlen(sourceFilename),sourceFilename);
-		#endif
 
-		if ((int)strlen(sourceFilename) > MAXINPUTFILELENGTH) {
+		if ((int)strlen(basename(sourceFilename)) > MAXINPUTFILELENGTH) {
 			printf("Invalid File, Name must be less than %d characters\n",MAXINPUTFILELENGTH);
 		} else if (!strcmp(sourceFilename,QUITSYMBOL)) {
 				continueStatus = FALSE;
@@ -39,14 +33,6 @@ int main(void) {
 			buffer1 = allocatedBuffer1();
 			if (!readFile(sourceFilename, buffer1)) {
 
-				#ifdef DEBUG
-					printf("%d\n%d\n%d\n",buffer1->total,buffer1->startingPosition,buffer1->direction);
-					cur = buffer1->requestList->head;
-					while (cur != NULL) {
-						printf("%d ",(cur->data));
-						cur = cur->next;
-					}
-				#endif
 
 				printf("FCFS %d\n",FCFS(buffer1));
 				printf("SSTF %d\n",SSTF(buffer1));

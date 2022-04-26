@@ -30,7 +30,7 @@ run : $(BUILD_DIR)/$(EXEC)
 	./$(EXECTOTAL)
 
 test : $(BUILD_DIR)/$(EXEC)
-	./$(EXECTOTAL) < $(DEST_DIR)/userInput.txt
+	./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt
 
 val : $(BUILD_DIR)/$(EXEC)
-	valgrind --leak-check=full --track-origins=yes -s ./$(EXECTOTAL) < $(DEST_DIR)/userInput.txt
+	valgrind --leak-check=full --track-origins=yes -s ./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt > /dev/null
