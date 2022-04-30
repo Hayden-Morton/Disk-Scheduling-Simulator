@@ -5,7 +5,7 @@ DEST_DIR = dest
 
 
 CC = gcc
-EXEC = simulator
+EXEC = scheduler
 CFLAGS = -Wall -ansi -pedantic -Werror -g
 
 EXECTOTAL = $(DEST_DIR)/$(EXEC)
