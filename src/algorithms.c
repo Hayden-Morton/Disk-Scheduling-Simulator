@@ -79,7 +79,9 @@ int _iterateThroughCylinders(Buffer1* buffer1, restartSearchFunction restart) {
         }
         curPosition += 1 * cylinderDirection;
         
-        restart(&(buffer1->total), &curPosition, &prevPosition, &cylinderDirection, &total);
+        if ((curPosition >= buffer1->total -1) || (curPosition <= 0)) {
+            restart(&(buffer1->total), &curPosition, &prevPosition, &cylinderDirection, &total);
+        }
     }
     freeLinkedList(unvisited);
     
@@ -90,11 +92,9 @@ int SCAN(Buffer1* buffer1) {
     return _iterateThroughCylinders(buffer1, _SCANRestart);
 }
 void _SCANRestart(int* maxSize, int* curPosition, int* prevPosition, directionType* direction, int* total) {
-     if ((*curPosition >= *maxSize -1) || (*curPosition <= 0)) {
-        *direction *= -1;
-        *total += abs(*curPosition - *prevPosition);
-        *prevPosition = *curPosition;
-    }
+    *direction *= -1;
+    *total += abs(*curPosition - *prevPosition);
+    *prevPosition = *curPosition;
 }
 
 
@@ -102,11 +102,9 @@ int CSCAN(Buffer1* buffer1) {
     return _iterateThroughCylinders(buffer1, _CSCANRestart);
 }
 void _CSCANRestart(int* maxSize, int* curPosition, int* prevPosition, directionType* direction, int* total) {
-     if ((*curPosition >= *maxSize -1) || (*curPosition <= 0)) {
-        *total += abs(*curPosition - *prevPosition) + *maxSize -1;
-        *curPosition = *maxSize -1 - *curPosition;
-        *prevPosition = *curPosition;
-    }
+    *total += abs(*curPosition - *prevPosition) + *maxSize -1;
+    *curPosition = *maxSize -1 - *curPosition;
+    *prevPosition = *curPosition;
 }
 
 
@@ -114,9 +112,7 @@ int LOOK(Buffer1* buffer1) {
     return _iterateThroughCylinders(buffer1, _LOOKRestart);
 }
 void _LOOKRestart(int* maxSize, int* curPosition, int* prevPosition, directionType* direction, int* total) {
-     if ((*curPosition >= *maxSize -1) || (*curPosition <= 0)) {
-        *direction *= -1;
-    }
+    *direction *= -1;
 }
 
 
@@ -124,9 +120,7 @@ int CLOOK(Buffer1* buffer1) {
     return _iterateThroughCylinders(buffer1, _CLOOKRestart);
 }
 void _CLOOKRestart(int* maxSize, int* curPosition, int* prevPosition, directionType* direction, int* total) {
-     if ((*curPosition >= *maxSize -1) || (*curPosition <= 0)) {
-        *curPosition = *maxSize -1 - *curPosition;
-    }
+    *curPosition = *maxSize -1 - *curPosition;
 }
 
 

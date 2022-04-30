@@ -14,7 +14,7 @@ SRCS = $(shell find $(SRC_DIR) -name '*.c')
 
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 
-$(BUILD_DIR)/$(EXEC) : $(OBJS)
+$(EXECTOTAL) : $(OBJS)
 	$(CC) $(OBJS) -o $(EXECTOTAL)
 
 $(BUILD_DIR)/%.c.o : %.c
@@ -26,11 +26,11 @@ clean:
 	rm $(EXECTOTAL)
 	rm -r $(BUILD_DIR)
 
-run : $(BUILD_DIR)/$(EXEC)
+run : $(EXECTOTAL)
 	./$(EXECTOTAL)
 
-test : $(BUILD_DIR)/$(EXEC)
+test : $(EXECTOTAL)
 	./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt
 
-val : $(BUILD_DIR)/$(EXEC)
-	valgrind --leak-check=full --track-origins=yes -s ./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt > /dev/null
+val : $(EXECTOTAL)
+	valgrind --leak-check=full --track-origins=yes -s ./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt

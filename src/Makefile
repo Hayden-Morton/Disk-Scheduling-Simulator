@@ -1,8 +1,8 @@
 
 CC = gcc
-EXEC = schedulSim
+EXEC = simulator
 CFLAGS = -Wall -ansi -pedantic -Werror -g
-OBJ = main.o linkedlist.o readFile.o buffer1.o algorithms.o
+OBJ = simulator.o linkedlist.o readFile.o buffer1.o algorithms.o
 
 ifdef DEBUG
 CFLAGS += -D DEBUG
@@ -12,8 +12,8 @@ endif
 $(EXEC) : $(OBJ)
 	$(CC) $(OBJ) -o $(EXEC)
 
-main.o : main.c buffer1.h linkedlist.h readFile.h algorithms.h assumptions.h
-	$(CC) $(CFLAGS) main.c -c
+simulator.o : simulator.c buffer1.h linkedlist.h readFile.h algorithms.h assumptions.h
+	$(CC) $(CFLAGS) simulator.c -c
 
 readFile.o : readFile.c buffer1.h linkedlist.h
 	$(CC) $(CFLAGS) readFile.c -c

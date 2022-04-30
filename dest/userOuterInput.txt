@@ -1,3 +1,4 @@
+	
 doesntexit
 waytoolonganinput
 dest/input2.txt
