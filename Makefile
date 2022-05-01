@@ -7,6 +7,7 @@ DEST_DIR = dest
 CC = gcc
 EXEC = scheduler
 CFLAGS = -Wall -ansi -pedantic -Werror -g
+THREADFLAGS = -pthread
 
 EXECTOTAL = $(DEST_DIR)/$(EXEC)
 
@@ -15,7 +16,7 @@ SRCS = $(shell find $(SRC_DIR) -name '*.c')
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 
 $(EXECTOTAL) : $(OBJS)
-	$(CC) $(OBJS) -o $(EXECTOTAL)
+	$(CC) $(THREADFLAGS) $(OBJS) -o $(EXECTOTAL)
 
 $(BUILD_DIR)/%.c.o : %.c
 	mkdir -p $(dir $@)

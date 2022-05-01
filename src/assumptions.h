@@ -4,9 +4,9 @@
     #define MAXUSERINPUTLENGTH 100
     #define MAXINPUTFILELENGTH 10
     #define QUITSYMBOL "QUIT"
+    
+    #define NUMBEROFSCHEDULINGALGORITHMS 6
 
-    #define FALSE 0
-    #define TRUE !FALSE
     
 #endif
 
