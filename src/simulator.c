@@ -19,48 +19,44 @@ pthread_cond_t condRead, condWrite, condBuffer2Empty;
 int main(void) {
 
 	char sourceFilename[MAXUSERINPUTLENGTH];
+	int readSuccess;
 
-	Buffer1* buffer1 = allocatedBuffer1();
-	Buffer2 buffer2;
-
-	bool buffer2Empty = TRUE;
-
-	threadArguments* thArgs;
-	int i;
-	
 	bool continueStatus = TRUE;
 
 	char* algNames[] = {"FCFS","SSTF","SCAN","CSCAN","LOOK","CLOOK"};
 	schedulingAlg algs[] = {FCFS,SSTF,SCAN,CSCAN,LOOK,CLOOK};
 
-	int threadCount = 6;
+	int threadCount = SCHEDULINGALGORITHMSNUMBER;
+	pthread_t thread[SCHEDULINGALGORITHMSNUMBER];
 
-	pthread_t thread[6];
+	threadArguments* thArgs;	/*Used for thread management*/
+	int i;
 
+	Buffer1* buffer1 = allocatedBuffer1(); /*Read In*/
+	Buffer2 buffer2;	/*Mono Bounded Buffer*/
+
+	/*Setup*/
+	buffer2.value = 0;
+	buffer2.threadId = -1; /*"-1" signifies buffer2 is empty, can be overridden*/
 	pthread_mutex_init(&mutexRead,NULL);
 	pthread_mutex_init(&mutexWrite,NULL);
-
 	pthread_cond_init(&condRead,NULL);
 	pthread_cond_init(&condWrite,NULL);
 	pthread_cond_init(&condBuffer2Empty,NULL);
 
-	buffer2.value = 0;
-	buffer2.threadId = -1;
-
-
 	for (i = 0; i < threadCount; i++) {
-		thArgs = malloc(sizeof(threadArguments));
+		thArgs = malloc(sizeof(threadArguments));	/*passing arguments to the child threads, instead of using global variables*/
 		thArgs->threadId = i;
 		thArgs->schedulAlg = algs[i];
 		thArgs->buffer1 = buffer1;
 		thArgs->buffer2 = &buffer2;
-		thArgs->buffer2Empty = &buffer2Empty;
 		thArgs->continueStatus = &continueStatus;
 		if (pthread_create(&thread[i],NULL,&thRoutine,thArgs)) {
 			return 1;
 		}
 	}
 
+	/*Main Loop*/
 	do {
 		printf("Disk Scheduler Simulation: ");
 		scanf("%s",sourceFilename);
@@ -68,23 +64,30 @@ int main(void) {
 
 		if ((int)strlen(basename(sourceFilename)) > MAXINPUTFILELENGTH) {
 			printf("Invalid File, Name must be less than %d characters\n",MAXINPUTFILELENGTH);
+
 		} else if (!strcmp(sourceFilename,QUITSYMBOL)) {
 				pthread_mutex_lock(&mutexRead);
 				continueStatus = FALSE;
 				pthread_mutex_unlock(&mutexRead);
 				pthread_cond_broadcast(&condRead);
-		} else {
 
-			if (!readFile(sourceFilename, buffer1)) {
+		} else {
+			pthread_mutex_lock(&mutexRead);
+			readSuccess = !readFile(sourceFilename, buffer1);	
+			pthread_mutex_unlock(&mutexRead);
+
+			if (readSuccess) {
+				printf("For %s:\n",basename(sourceFilename));
 				pthread_cond_broadcast(&condRead);
 
 				for ( i = 0; i < threadCount; i++ ) {
 					pthread_mutex_lock(&mutexWrite);
 					pthread_cond_wait(&condWrite,&mutexWrite);
+					printf("main: mutexWrite\n");
 					printf("%s: %d\n", algNames[buffer2.threadId], buffer2.value);
-					buffer2Empty = TRUE;
+					buffer2.threadId = -1;	/*Mark as empty*/
 					pthread_mutex_unlock(&mutexWrite);
-					pthread_cond_broadcast(&condBuffer2Empty);
+					pthread_cond_signal(&condBuffer2Empty);
 				}
 				refreshBuffer1(buffer1);
 			}
@@ -92,14 +95,13 @@ int main(void) {
 	
 	} while (continueStatus);
 
+	/*Clean up*/
 	for (i = 0; i < threadCount; i++) {
 		if (pthread_join(thread[i],NULL)) {
 			return 2;
 		}
 	}
-
 	freeBuffer1(buffer1);
-
 	pthread_mutex_destroy(&mutexRead);
 	pthread_mutex_destroy(&mutexWrite);
 	pthread_cond_destroy(&condRead);
@@ -112,27 +114,27 @@ int main(void) {
 void* thRoutine(void* args) {
 	threadArguments thArgs = *(threadArguments*)args;
 
-	pthread_mutex_lock(&mutexRead);
 	while(TRUE) {
+		pthread_mutex_lock(&mutexRead);
 		pthread_cond_wait(&condRead,&mutexRead);
-		if (thArgs.continueStatus) {
+		if (*(thArgs.continueStatus)) {
+			pthread_mutex_unlock(&mutexRead);
 			pthread_mutex_lock(&mutexWrite);
-			if (!(thArgs.buffer2Empty)) {
+			while (thArgs.buffer2->threadId != -1) {
 				pthread_cond_wait(&condBuffer2Empty,&mutexWrite);
 			}
-			thArgs.buffer2Empty = FALSE;
+			printf("thread mutexWrite\n");
 			thArgs.buffer2->value = (thArgs.schedulAlg)(thArgs.buffer1);
 			thArgs.buffer2->threadId = thArgs.threadId;
 
 			pthread_mutex_unlock(&mutexWrite);
 			pthread_cond_signal(&condWrite);
 		} else {
+			pthread_mutex_unlock(&mutexRead);
 			printf("thread_%d terminated\n",thArgs.threadId);
 			free(args);
-			pthread_mutex_unlock(&mutexRead);
 			return NULL;
 		}
-		pthread_mutex_unlock(&mutexRead);
 	}
 }
 

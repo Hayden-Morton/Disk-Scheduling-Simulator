@@ -34,4 +34,17 @@ test : $(EXECTOTAL)
 	./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt
 
 val : $(EXECTOTAL)
-	valgrind --leak-check=full --track-origins=yes -s ./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt
+	valgrind --leak-check=full --track-origins=yes -s ./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt > /dev/null
+
+stress : $(EXECTOTAL)
+	./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt
+	./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt
+	./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt
+	./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt
+	./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt
+	./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt
+	./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt
+	./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt
+	./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt
+	./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt
+	./$(EXECTOTAL) < $(DEST_DIR)/userOuterInput.txt

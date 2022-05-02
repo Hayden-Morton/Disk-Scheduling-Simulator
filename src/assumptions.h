@@ -5,7 +5,7 @@
     #define MAXINPUTFILELENGTH 10
     #define QUITSYMBOL "QUIT"
     
-    #define NUMBEROFSCHEDULINGALGORITHMS 6
+    #define SCHEDULINGALGORITHMSNUMBER 6
 
     
 #endif

@@ -18,7 +18,6 @@
         Buffer1* buffer1;
         Buffer2* buffer2;
         schedulingAlg schedulAlg;
-        bool* buffer2Empty;
         bool* continueStatus;
     } threadArguments;
 
