@@ -4,10 +4,6 @@
     #include "buffer1.h"
     #include "algorithms.h"
 
-    typedef int bool;
-    #define FALSE 0
-    #define TRUE !FALSE
-
     typedef struct {
         int value;
         int threadId;

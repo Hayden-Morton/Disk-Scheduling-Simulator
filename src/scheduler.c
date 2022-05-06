@@ -8,7 +8,7 @@
 #include "linkedlist.h"
 #include "readFile.h"
 #include "algorithms.h"
-
+#include "scheduler.h"
 #include "assumptions.h"
 
 int main(void) {

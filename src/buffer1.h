@@ -15,6 +15,7 @@
     } Buffer1;
 
     Buffer1* allocatedBuffer1(void);
+    void refreshBuffer1(Buffer1* buffer1);
     void freeBuffer1(Buffer1* buffer1);
 #endif
 

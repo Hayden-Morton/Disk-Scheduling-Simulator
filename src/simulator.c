@@ -8,7 +8,7 @@
 #include "linkedlist.h"
 #include "readFile.h"
 #include "algorithms.h"
-
+#include "scheduler.h"
 #include "simulator.h"
 #include "assumptions.h"
 
@@ -83,7 +83,6 @@ int main(void) {
 				for ( i = 0; i < threadCount; i++ ) {
 					pthread_mutex_lock(&mutexWrite);
 					pthread_cond_wait(&condWrite,&mutexWrite);
-					printf("main: mutexWrite\n");
 					printf("%s: %d\n", algNames[buffer2.threadId], buffer2.value);
 					buffer2.threadId = -1;	/*Mark as empty*/
 					pthread_mutex_unlock(&mutexWrite);
@@ -123,7 +122,6 @@ void* thRoutine(void* args) {
 			while (thArgs.buffer2->threadId != -1) {
 				pthread_cond_wait(&condBuffer2Empty,&mutexWrite);
 			}
-			printf("thread mutexWrite\n");
 			thArgs.buffer2->value = (thArgs.schedulAlg)(thArgs.buffer1);
 			thArgs.buffer2->threadId = thArgs.threadId;
 
