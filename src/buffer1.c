@@ -1,3 +1,15 @@
+/*
+File: buffer1.c
+
+Author: Hayden Morton
+Course: Operating Systems
+Date: Semester 1 2022
+
+Summary
+    Buffer1 management
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 

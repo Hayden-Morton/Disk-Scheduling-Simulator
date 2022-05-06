@@ -1,3 +1,15 @@
+/*
+File: algorithms.c
+
+Author: Hayden Morton
+Course: Operating Systems
+Date: Semester 1 2022
+
+Summary
+    Contains 6 disk schedling algorithms which compute the total movement of a disk head, depending on the type.
+
+
+*/
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -5,7 +17,7 @@
 #include "linkedlist.h"
 #include "algorithms.h"
 
-int FCFS(Buffer1* buffer1) {
+int FCFS(Buffer1* buffer1) { /*First Come First Served*/
     
     LinkedListNode* cur = buffer1->requestList->head;
     int total = 0;
@@ -20,7 +32,7 @@ int FCFS(Buffer1* buffer1) {
     return total;
 }
 
-int SSTF(Buffer1* buffer1) {
+int SSTF(Buffer1* buffer1) { /*Shorted Seek Time First*/
     
     LinkedList* unvisited = copyLinkedList(buffer1->requestList);
     LinkedListNode* cur;
@@ -55,7 +67,7 @@ int SSTF(Buffer1* buffer1) {
 }
 
 
-int _iterateThroughCylinders(Buffer1* buffer1, restartSearchFunction restart) {
+int _iterateThroughCylinders(Buffer1* buffer1, restartSearchFunction restart) { /*repeated use for SCAN, CSCAN, LOOK, and CLOOK*/
     
     LinkedList* unvisited = copyLinkedList(buffer1->requestList);
     LinkedListNode* cur;
@@ -88,18 +100,18 @@ int _iterateThroughCylinders(Buffer1* buffer1, restartSearchFunction restart) {
     return total;
 }
 
-int SCAN(Buffer1* buffer1) {
-    return _iterateThroughCylinders(buffer1, _SCANRestart);
+int SCAN(Buffer1* buffer1) { /*Scan: directional scan until end of cylinder then reverse*/
+    return _iterateThroughCylinders(buffer1, _SCANRestart); /*Wrapper */
 }
-void _SCANRestart(int* maxSize, int* curPosition, int* prevPosition, directionType* direction, int* total) {
+void _SCANRestart(int* maxSize, int* curPosition, int* prevPosition, directionType* direction, int* total) { /*restart condition for when it reverses or wraps, same for all others*/
     *direction *= -1;
     *total += abs(*curPosition - *prevPosition);
     *prevPosition = *curPosition;
 }
 
 
-int CSCAN(Buffer1* buffer1) {
-    return _iterateThroughCylinders(buffer1, _CSCANRestart);
+int CSCAN(Buffer1* buffer1) { /*Cylical Scan: direction scan until end of cylinder then wrap to other side*/
+    return _iterateThroughCylinders(buffer1, _CSCANRestart); /*Wrapper */
 }
 void _CSCANRestart(int* maxSize, int* curPosition, int* prevPosition, directionType* direction, int* total) {
     *total += abs(*curPosition - *prevPosition) + *maxSize -1;
@@ -108,25 +120,17 @@ void _CSCANRestart(int* maxSize, int* curPosition, int* prevPosition, directionT
 }
 
 
-int LOOK(Buffer1* buffer1) {
-    return _iterateThroughCylinders(buffer1, _LOOKRestart);
+int LOOK(Buffer1* buffer1) { /*Look: directional scan up to end of requests then reverse*/
+    return _iterateThroughCylinders(buffer1, _LOOKRestart);/*Wrapper*/
 }
 void _LOOKRestart(int* maxSize, int* curPosition, int* prevPosition, directionType* direction, int* total) {
     *direction *= -1;
 }
 
 
-int CLOOK(Buffer1* buffer1) {
-    return _iterateThroughCylinders(buffer1, _CLOOKRestart);
+int CLOOK(Buffer1* buffer1) {/*Cyclic Look: directional scan up to end of requests then wrap to other side*/
+    return _iterateThroughCylinders(buffer1, _CLOOKRestart);/*Wrapper*/
 }
 void _CLOOKRestart(int* maxSize, int* curPosition, int* prevPosition, directionType* direction, int* total) {
     *curPosition = *maxSize -1 - *curPosition;
 }
-
-
-
-
-
-
-
-
