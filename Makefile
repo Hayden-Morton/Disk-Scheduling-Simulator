@@ -36,8 +36,8 @@ test : $(EXECTOTALS)
 	./$(DEST_DIR)/scheduler < $(DEST_DIR)/userOuterInput.txt
 	
 val : $(EXECTOTALS)
-	valgrind --leak-check=full --track-origins=yes -s ./$(DEST_DIR)/simulator < $(DEST_DIR)/userOuterInput.txt > /dev/null
 	valgrind --leak-check=full --track-origins=yes -s ./$(DEST_DIR)/scheduler < $(DEST_DIR)/userOuterInput.txt > /dev/null
+	valgrind --leak-check=full --track-origins=yes -s ./$(DEST_DIR)/simulator < $(DEST_DIR)/userOuterInput.txt > /dev/null
 
 stress : $(EXECTOTALS)
 	$(MAKE) test

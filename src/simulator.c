@@ -1,3 +1,10 @@
+/*
+File: simulator.c
+Author: Hayden Morton
+Course: Operating Systems
+Date: Semester 1 2022
+Summary: runs the disk scheduling simulator with threads
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -82,13 +89,12 @@ int main(void) {
 
 				for ( i = 0; i < threadCount; i++ ) {
 					pthread_mutex_lock(&mutexWrite);
-					pthread_cond_wait(&condWrite,&mutexWrite);
+					pthread_cond_wait(&condWrite,&mutexWrite); /*wait for child thread to write to buffer2*/
 					printf("%s: %d\n", algNames[buffer2.threadId], buffer2.value);
 					buffer2.threadId = -1;	/*Mark as empty*/
 					pthread_mutex_unlock(&mutexWrite);
-					pthread_cond_signal(&condBuffer2Empty);
+					pthread_cond_signal(&condBuffer2Empty); /*signal any waiting child threads that buffer2 is now empty*/
 				}
-				refreshBuffer1(buffer1);
 			}
 		}
 	
@@ -110,23 +116,23 @@ int main(void) {
 	return 0;
 }
 
-void* thRoutine(void* args) {
-	threadArguments thArgs = *(threadArguments*)args;
+void* thRoutine(void* args) { /*the child threads each compute when buffer1 available, storing results in buffer2, continuing until request not*/
+	threadArguments thArgs = *(threadArguments*)args; /*since pass by reference only given once on creation*/
 
 	while(TRUE) {
 		pthread_mutex_lock(&mutexRead);
-		pthread_cond_wait(&condRead,&mutexRead);
+		pthread_cond_wait(&condRead,&mutexRead); /*wait for buffer1 to be written*/
 		if (*(thArgs.continueStatus)) {
 			pthread_mutex_unlock(&mutexRead);
 			pthread_mutex_lock(&mutexWrite);
-			while (thArgs.buffer2->threadId != -1) {
+			while (thArgs.buffer2->threadId != -1) { /*while buffer2 is full, wait*/
 				pthread_cond_wait(&condBuffer2Empty,&mutexWrite);
 			}
 			thArgs.buffer2->value = (thArgs.schedulAlg)(thArgs.buffer1);
 			thArgs.buffer2->threadId = thArgs.threadId;
 
 			pthread_mutex_unlock(&mutexWrite);
-			pthread_cond_signal(&condWrite);
+			pthread_cond_signal(&condWrite); /* signal parent to write out buffer2*/
 		} else {
 			pthread_mutex_unlock(&mutexRead);
 			printf("thread_%d terminated\n",thArgs.threadId);

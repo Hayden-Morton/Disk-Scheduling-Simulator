@@ -1,3 +1,11 @@
+/*
+File: scheduler.c
+Author: Hayden Morton
+Course: Operating Systems
+Date: Semester 1 2022
+Summary: runs the disk scheduling simulator, without threads
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,17 +30,14 @@ int main(void) {
 	do {
 		printf("Disk Scheduler Simulation: ");
 		scanf("%s",sourceFilename);
-		
 
 		if ((int)strlen(basename(sourceFilename)) > MAXINPUTFILELENGTH) {
 			printf("Invalid File, Name must be less than %d characters\n",MAXINPUTFILELENGTH);
-		} else if (!strcmp(sourceFilename,QUITSYMBOL)) {
+		} else if (!strcmp(sourceFilename,QUITSYMBOL)) { /*if is equal to QUITSYMBOL*/
 				continueStatus = FALSE;
 		} else {
-
 			buffer1 = allocatedBuffer1();
 			if (!readFile(sourceFilename, buffer1)) {
-
 
 				printf("FCFS %d\n",FCFS(buffer1));
 				printf("SSTF %d\n",SSTF(buffer1));
@@ -44,7 +49,6 @@ int main(void) {
 			freeBuffer1(buffer1);
 		}
 	} while (continueStatus);
-
 	return 0;
 }
 

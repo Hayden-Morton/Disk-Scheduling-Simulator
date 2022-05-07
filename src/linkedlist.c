@@ -1,3 +1,11 @@
+/*
+File: linkedlist.c
+Author: Hayden Morton
+Course: Operating Systems
+Date: Semester 1 2022
+Summary:
+    implementation of a linked list specificly to hold the memory locations for buffer1
+*/
 #include <stdlib.h>
 #include "linkedlist.h"
 

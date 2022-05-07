@@ -24,7 +24,7 @@ Buffer1* allocatedBuffer1(void) {
     return buffer1;
 }
 
-void refreshBuffer1(Buffer1* buffer1) {
+void refreshBuffer1(Buffer1* buffer1) { /*resetting buffer1 for new files*/
     if (buffer1->requestList != NULL) {
         freeLinkedList(buffer1->requestList);
         buffer1->requestList = NULL;

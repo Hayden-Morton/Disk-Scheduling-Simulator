@@ -91,7 +91,7 @@ int _iterateThroughCylinders(Buffer1* buffer1, restartSearchFunction restart) { 
         }
         curPosition += 1 * cylinderDirection;
         
-        if ((curPosition >= buffer1->total -1) || (curPosition <= 0)) {
+        if ((curPosition > buffer1->total -1) || (curPosition < 0)) {
             restart(&(buffer1->total), &curPosition, &prevPosition, &cylinderDirection, &total);
         }
     }
@@ -105,6 +105,13 @@ int SCAN(Buffer1* buffer1) { /*Scan: directional scan until end of cylinder then
 }
 void _SCANRestart(int* maxSize, int* curPosition, int* prevPosition, directionType* direction, int* total) { /*restart condition for when it reverses or wraps, same for all others*/
     *direction *= -1;
+
+    if (*curPosition > *maxSize -1) {
+        *curPosition = *maxSize - 1;
+    } else {
+        *curPosition = 0;
+    }
+
     *total += abs(*curPosition - *prevPosition);
     *prevPosition = *curPosition;
 }
@@ -114,6 +121,11 @@ int CSCAN(Buffer1* buffer1) { /*Cylical Scan: direction scan until end of cylind
     return _iterateThroughCylinders(buffer1, _CSCANRestart); /*Wrapper */
 }
 void _CSCANRestart(int* maxSize, int* curPosition, int* prevPosition, directionType* direction, int* total) {
+    if (*curPosition > *maxSize -1) {
+        *curPosition = *maxSize - 1;
+    } else {
+        *curPosition = 0;
+    }
     *total += abs(*curPosition - *prevPosition) + *maxSize -1;
     *curPosition = *maxSize -1 - *curPosition;
     *prevPosition = *curPosition;
