@@ -38,6 +38,7 @@ int main(void) {
 		} else {
 			buffer1 = allocatedBuffer1();
 			if (!readFile(sourceFilename, buffer1)) {
+				printf("For %s:\n",basename(sourceFilename));
 
 				printf("FCFS %d\n",FCFS(buffer1));
 				printf("SSTF %d\n",SSTF(buffer1));

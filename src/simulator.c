@@ -73,15 +73,11 @@ int main(void) {
 			printf("Invalid File, Name must be less than %d characters\n",MAXINPUTFILELENGTH);
 
 		} else if (!strcmp(sourceFilename,QUITSYMBOL)) {
-				pthread_mutex_lock(&mutexRead);
 				continueStatus = FALSE;
-				pthread_mutex_unlock(&mutexRead);
 				pthread_cond_broadcast(&condRead);
 
 		} else {
-			pthread_mutex_lock(&mutexRead);
 			readSuccess = !readFile(sourceFilename, buffer1);	
-			pthread_mutex_unlock(&mutexRead);
 
 			if (readSuccess) {
 				printf("For %s:\n",basename(sourceFilename));
