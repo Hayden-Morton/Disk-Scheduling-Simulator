@@ -15,6 +15,8 @@
         Buffer2* buffer2;
         schedulingAlg schedulAlg;
         bool* continueStatus;
+        int* finishedChildren;
+        int* buffer1Rewrites;
     } threadArguments;
 
     void* thRoutine(void* args);

@@ -29,6 +29,8 @@ int main(void) {
 	int readSuccess;
 
 	bool continueStatus = TRUE;
+	int finishedChildren = 0; /*to track if parent thread needs to wait*/
+	int buffer1Rewrites = 0; /*to track how many times the input buffer has been overritten, so the child threads can detemine if new data*/
 
 	char* algNames[] = {"FCFS","SSTF","SCAN","CSCAN","LOOK","CLOOK"};
 	schedulingAlg algs[] = {FCFS,SSTF,SCAN,CSCAN,LOOK,CLOOK};
@@ -58,6 +60,8 @@ int main(void) {
 		thArgs->buffer1 = buffer1;
 		thArgs->buffer2 = &buffer2;
 		thArgs->continueStatus = &continueStatus;
+		thArgs->finishedChildren = &finishedChildren;
+		thArgs->buffer1Rewrites = &buffer1Rewrites;
 		if (pthread_create(&thread[i],NULL,&thRoutine,thArgs)) {
 			return 1;
 		}
@@ -74,6 +78,7 @@ int main(void) {
 
 		} else if (!strcmp(sourceFilename,QUITSYMBOL)) {
 				continueStatus = FALSE;
+				buffer1Rewrites +=1;
 				pthread_cond_broadcast(&condRead);
 
 		} else {
@@ -81,13 +86,17 @@ int main(void) {
 
 			if (readSuccess) {
 				printf("For %s:\n",basename(sourceFilename));
+				buffer1Rewrites += 1;
 				pthread_cond_broadcast(&condRead);
 
 				for ( i = 0; i < threadCount; i++ ) {
 					pthread_mutex_lock(&mutexWrite);
-					pthread_cond_wait(&condWrite,&mutexWrite); /*wait for child thread to write to buffer2*/
+					while (finishedChildren == 0) {
+						pthread_cond_wait(&condWrite,&mutexWrite); /*wait for child thread to write to buffer2*/
+					}
 					printf("%s: %d\n", algNames[buffer2.threadId], buffer2.value);
 					buffer2.threadId = -1;	/*Mark as empty*/
+					finishedChildren -= 1;
 					pthread_mutex_unlock(&mutexWrite);
 					pthread_cond_signal(&condBuffer2Empty); /*signal any waiting child threads that buffer2 is now empty*/
 				}
@@ -114,10 +123,13 @@ int main(void) {
 
 void* thRoutine(void* args) { /*the child threads each compute when buffer1 available, storing results in buffer2, continuing until request not*/
 	threadArguments thArgs = *(threadArguments*)args; /*since pass by reference only given once on creation*/
-
+	int prevBuffer1Written = 0;
 	while(TRUE) {
 		pthread_mutex_lock(&mutexRead);
-		pthread_cond_wait(&condRead,&mutexRead); /*wait for buffer1 to be written*/
+		while(*(thArgs.buffer1Rewrites) != prevBuffer1Written + 1) {
+			pthread_cond_wait(&condRead,&mutexRead); /*wait for buffer1 to be written*/
+		}
+		prevBuffer1Written = *(thArgs.buffer1Rewrites);
 		if (*(thArgs.continueStatus)) {
 			pthread_mutex_unlock(&mutexRead);
 			pthread_mutex_lock(&mutexWrite);
@@ -127,6 +139,7 @@ void* thRoutine(void* args) { /*the child threads each compute when buffer1 avai
 			thArgs.buffer2->value = (thArgs.schedulAlg)(thArgs.buffer1);
 			thArgs.buffer2->threadId = thArgs.threadId;
 
+			*(thArgs.finishedChildren) += 1;
 			pthread_mutex_unlock(&mutexWrite);
 			pthread_cond_signal(&condWrite); /* signal parent to write out buffer2*/
 		} else {
