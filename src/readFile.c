@@ -36,8 +36,17 @@ int readFile(char* sourceFileName, Buffer1* buffer1) { /*read the file storing i
 		fclose(source);
 		return 2;
 	}
-
+	if (cylinderTotal <= 0) {
+		printf("Error Reading File: Cylinder Total must be greater than 0\n");
+		fclose(source);
+		return 3;
+	}
 	buffer1->total = cylinderTotal;
+	if ( (startPos > cylinderTotal -1) || (startPos < 0) || (prevPos > cylinderTotal -1) || (prevPos < 0) ) {
+		printf("Error Reading File: Position cannot be greater than cylinder total\n");
+		fclose(source);
+		return 3;
+	}
 	buffer1->startingPosition = startPos;
 	if (startPos > prevPos) {
 		buffer1->direction = ASCENDING;
@@ -48,7 +57,7 @@ int readFile(char* sourceFileName, Buffer1* buffer1) { /*read the file storing i
 	do {
 		successRead = fscanf(source, "%d", &request);
 		if (successRead == 1) {
-			if (request > buffer1->total - 1) {
+			if ((request > buffer1->total - 1) || (request < 0) ) {
 				printf("Error Reading File: Request cannot be greater than cylinder total\n");
 				fclose(source);
 				return 3;
