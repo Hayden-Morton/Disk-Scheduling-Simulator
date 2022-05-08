@@ -122,6 +122,7 @@ int main(void) {
 }
 
 void* thRoutine(void* args) { /*the child threads each compute when buffer1 available, storing results in buffer2, continuing until request not*/
+	int seekTime;
 	threadArguments thArgs = *(threadArguments*)args; /*since pass by reference only given once on creation*/
 	int prevBuffer1Written = 0;
 	while(TRUE) {
@@ -132,11 +133,12 @@ void* thRoutine(void* args) { /*the child threads each compute when buffer1 avai
 		prevBuffer1Written = *(thArgs.buffer1Rewrites);
 		if (*(thArgs.continueStatus)) {
 			pthread_mutex_unlock(&mutexRead);
+			seekTime = (thArgs.schedulAlg)(thArgs.buffer1);
 			pthread_mutex_lock(&mutexWrite);
 			while (thArgs.buffer2->threadId != -1) { /*while buffer2 is full, wait*/
 				pthread_cond_wait(&condBuffer2Empty,&mutexWrite);
 			}
-			thArgs.buffer2->value = (thArgs.schedulAlg)(thArgs.buffer1);
+			thArgs.buffer2->value = seekTime;
 			thArgs.buffer2->threadId = thArgs.threadId;
 
 			*(thArgs.finishedChildren) += 1;
