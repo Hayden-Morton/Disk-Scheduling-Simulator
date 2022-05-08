@@ -21,7 +21,9 @@ int FCFS(Buffer1* buffer1) { /*First Come First Served*/
     
     LinkedListNode* cur = buffer1->requestList->head;
     int total = 0;
-    
+    if (cur == NULL) {
+        return 0;
+    }
     total += abs(buffer1->startingPosition - cur->data);
     cur = cur->next;
 

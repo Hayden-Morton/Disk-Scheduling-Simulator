@@ -1,6 +1,9 @@
 	
 doesntexit
 waytoolonganinput
-dest/input2.txt
 dest/input1.txt
+dest/input2.txt
+dest/input3.txt
+dest/input4.txt
+dest/input5.txt
 QUIT
